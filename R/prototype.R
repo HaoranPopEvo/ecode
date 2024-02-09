@@ -326,6 +326,19 @@ plot.eode <- function(x, n.grid = 20, scaleL = 1, scaleAH = 1, scaleS = 1,
         dxdt <- eval(parse(text = gsub(paste0(names(set_covar[i]),","), paste0(names(set_covar[i]),"=",set_covar[[i]],","), paste(trimws(deparse(dxdt)),collapse = " "))))
         dydt <- eval(parse(text = gsub(paste0(names(set_covar[i]),","), paste0(names(set_covar[i]),"=",set_covar[[i]],","), paste(trimws(deparse(dydt)),collapse = " "))))
       }
+      for(i in 1:length(axis_var_names)){
+        dxdt_string <- paste(trimws(deparse(dxdt)),collapse = " ")
+        dydt_string <- paste(trimws(deparse(dydt)),collapse = " ")
+
+        if(!grepl(axis_var_names[i], dxdt_string)){
+          dxdt_string <- paste0("function (", axis_var_names[i], ", ", strsplit(dxdt_string, "function \\(")[[1]][2])
+          dxdt <- eval(parse(text = dxdt_string))
+        }
+        if(!grepl(axis_var_names[i], dydt_string)){
+          dydt_string <- paste0("function (", axis_var_names[i], ", ", strsplit(dydt_string, "function \\(")[[1]][2])
+          dydt <- eval(parse(text = dydt_string))
+        }
+      }
     }
     arrows <- do.call(rbind,apply(expand.grid(xrange,yrange),MARGIN=1,function(xx){
       x_ <- xx[1]         #start_point.x
