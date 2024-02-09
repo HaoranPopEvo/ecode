@@ -321,6 +321,36 @@ eode_get_cripoi <- function(x, init_value, eps = 10e-4, max_step = 0.01, method 
 
 
 #STABLE-------------------------
+#' Stability Analysis
+#'
+#' Check whether an equilibrium point is stable or not, and give
+#' the specific type (i.e. stable node, stable focus, unstable node,
+#' unstable focus, saddle, or centre).
+#' Check whether an equilibrium point is stable or not.
+#' @param x Object of class "\code{eode}" representing an ODE system.
+#' @param value an object of class "\code{pp}" representing a phase point in the
+#' ODE system under consideration.
+#' @param eps Precision used to check whether the input phase point is an equilibrium
+#' point. If the absolute value of any component of the phase velocity vector at a
+#' phase point is lower than \code{eps}, an error would be thrown out.
+#'
+#' @return a string character indicate the type of the equilbrium point.
+#' @export
+#' @examples
+#' eq1 <- function(x, y, r1 = 1, a11 = 1, a12 = 2) (r1 - a11 * x - a12 * y) * x
+#' eq2 <- function(x, y, r2 = 1, a21 = 2, a22 = 1) (r2 - a21 * x - a22 * y) * y
+#' x <- eode(dxdt = eq1, dydt = eq2)
+#' eode_stability_type(x, value = pp(list(x = 0.3333, y = 0.3333)))
+#' @param
+eode_stability_type <- function(x, value, eps = 10e-4){
+  if(eode_is_stanod(x, value, eps)) return("stable node")
+  if(eode_is_stafoc(x, value, eps)) return("stable focus")
+  if(eode_is_unsnod(x, value, eps)) return("unstable node")
+  if(eode_is_unsfoc(x, value, eps)) return("unstable focus")
+  if(eode_is_saddle(x, value, eps)) return("saddle")
+  if(eode_is_centre(x, value, eps)) return("centre")
+}
+
 
 #' Stable Equilibrium Point
 #'
@@ -511,7 +541,7 @@ eode_is_saddle <- function(x, value, eps = 10e-4){
 #' eq2 <- function(x, y, r2 = 1, a21 = 2, a22 = 1) (r2 - a21 * x - a22 * y) * y
 #' x <- eode(dxdt = eq1, dydt = eq2)
 #' eode_is_centre(x, value = pp(list(x = 0.3333, y = 0.3333)))
-eode_is_centre <- function(x, value, eps=10e-4){
+eode_is_centre <- function(c){
   if(!eode_is_validval(x, value)) stop("phase point out of the boundary. Please check the constraints of the ODE system")
   if(!all(abs(eode_get_velocity(x, value)) < eps)) stop("'value' is not an equilibrium point")
   eigenvalues <- eigen(eode_get_sysmat(x, value))$value
