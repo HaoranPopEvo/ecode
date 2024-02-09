@@ -463,6 +463,10 @@ eode_gridSearch <- function(x, pdat, space, step = 0.01){
 #' Find optimal parameters in the ODE system using simulated annealing.
 #' @param x the ODE system under consideration. An object of "\code{eode}" class.
 #' @param pdat observed population dynamics. An object of "\code{pdata}" class.
+#' @param paras parameters to be optimised. A character vector. If multiple parameters
+#' are specified, the simulation annealing process will proceed by altering multiple
+#' parameters at the same time, and accept an alteration if it achieves a lower value of
+#' the loss function. Default is "ALL", which means to choose all the parameters.
 #' @param max_disturb maximum disturbance in proportion. The biggest disturbance acts on
 #' parameters at the beginning of the simulated annealing process.
 #' @param AnnN steps of simulated annealing.
