@@ -28,21 +28,29 @@ eq2 <- function(x, y, r2 = 1, a21 = 2, a22 = 1) (r2 - a21 * x - a22 * y) * y
 x <- eode(dxdt = eq1, dydt = eq2)
 eode_is_stapoi(x, value = pp(list(x = 0.3333, y = 0.3333)))
 
-##Example2: Susceptible-infected model
-dX_Cdt <- function(X_C, Y_C, X_A, Y_A, nu = 0.15, beta = 0.1, mu = 0.15, g = 0.04)
-nu * (X_A + Y_A) - beta * X_C * (Y_C + Y_A) - (mu + g) * X_C
+## Example2: Susceptible-infected model
+dX_Cdt <- function(X_C, Y_C, X_A, Y_A, nu = 0.15, beta = 0.1, mu = 0.15, g = 0.04) {
+  nu * (X_A + Y_A) - beta * X_C * (Y_C + Y_A) - (mu + g) * X_C
+}
 
-dY_Cdt <- function(X_C, Y_C, Y_A, beta = 0.1, mu = 0.15, g = 0.04, rho = 0.2)
-beta * X_C * (Y_C + Y_A) - (mu + g + rho) * Y_C
+dY_Cdt <- function(X_C, Y_C, Y_A, beta = 0.1, mu = 0.15, g = 0.04, rho = 0.2) {
+  beta * X_C * (Y_C + Y_A) - (mu + g + rho) * Y_C
+}
 
-dX_Adt <- function(X_C, Y_C, X_A, Y_A, beta = 0.1, g = 0.04)
-g * X_C - beta * X_A * (Y_C + Y_A)
+dX_Adt <- function(X_C, Y_C, X_A, Y_A, beta = 0.1, g = 0.04) {
+  g * X_C - beta * X_A * (Y_C + Y_A)
+}
 
-dY_Adt <- function(X_A, Y_C, Y_A, beta = 0.1, g = 0.04, rho = 0.2)
-beta * X_A * (Y_C + Y_A) + g * Y_C - rho * Y_A
+dY_Adt <- function(X_A, Y_C, Y_A, beta = 0.1, g = 0.04, rho = 0.2) {
+  beta * X_A * (Y_C + Y_A) + g * Y_C - rho * Y_A
+}
 
-x <- eode(dX_Cdt = dX_Cdt, dY_Cdt = dY_Cdt, dX_Adt = dX_Adt, dY_Adt = dY_Adt,
-constraint = c("X_C>=0","Y_C>=0","X_A>=0","Y_A>=0",
-               "X_C<5","Y_C<5","X_A<5","Y_A<5"))
+x <- eode(
+  dX_Cdt = dX_Cdt, dY_Cdt = dY_Cdt, dX_Adt = dX_Adt, dY_Adt = dY_Adt,
+  constraint = c(
+    "X_C>=0", "Y_C>=0", "X_A>=0", "Y_A>=0",
+    "X_C<5", "Y_C<5", "X_A<5", "Y_A<5"
+  )
+)
 eode_is_stapoi(x, value = pp(list(X_A = 1.3443, Y_A = 0.2304, X_C = 1.0655, Y_C = 0.0866)))
 }

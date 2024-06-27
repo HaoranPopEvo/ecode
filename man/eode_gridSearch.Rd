@@ -11,6 +11,8 @@ eode_gridSearch(x, pdat, space, step = 0.01)
 
 \item{pdat}{observed population dynamics. An object of "\code{pdata}" class.}
 
+\item{space}{space}
+
 \item{step}{interval of time for running simulations. Parameter of the function "\code{eode_proj()}".}
 }
 \value{
@@ -20,27 +22,39 @@ a data frame showing attempted parameters along with the corresponding values of
 Find optimal parameters in the ODE system using grid search method.
 }
 \examples{
-dX_Cdt <- function(X_C, Y_C, X_A, Y_A, nu = 0.15, beta = 0.1, mu = 0.15, g = 0.04)
-nu * (X_A + Y_A) - beta * X_C * (Y_C + Y_A) - (mu + g) * X_C
+\donttest{
+dX_Cdt <- function(X_C, Y_C, X_A, Y_A, nu = 0.15, beta = 0.1, mu = 0.15, g = 0.04) {
+  nu * (X_A + Y_A) - beta * X_C * (Y_C + Y_A) - (mu + g) * X_C
+}
 
-dY_Cdt <- function(X_C, Y_C, Y_A, beta = 0.1, mu = 0.15, g = 0.04, rho = 0.2)
-beta * X_C * (Y_C + Y_A) - (mu + g + rho) * Y_C
+dY_Cdt <- function(X_C, Y_C, Y_A, beta = 0.1, mu = 0.15, g = 0.04, rho = 0.2) {
+  beta * X_C * (Y_C + Y_A) - (mu + g + rho) * Y_C
+}
 
-dX_Adt <- function(X_C, Y_C, X_A, Y_A, beta = 0.1, g = 0.04)
-g * X_C - beta * X_A * (Y_C + Y_A)
+dX_Adt <- function(X_C, Y_C, X_A, Y_A, beta = 0.1, g = 0.04) {
+  g * X_C - beta * X_A * (Y_C + Y_A)
+}
 
-dY_Adt <- function(X_A, Y_C, Y_A, beta = 0.1, g = 0.04, rho = 0.2)
-beta * X_A * (Y_C + Y_A) + g * Y_C - rho * Y_A
+dY_Adt <- function(X_A, Y_C, Y_A, beta = 0.1, g = 0.04, rho = 0.2) {
+  beta * X_A * (Y_C + Y_A) + g * Y_C - rho * Y_A
+}
 
-x <- eode(dX_Cdt = dX_Cdt, dY_Cdt = dY_Cdt, dX_Adt = dX_Adt, dY_Adt = dY_Adt,
-constraint = c("X_C>=0","Y_C>=0","X_A>=0","Y_A>=0"))
-training_data <- pdata(x, init = data.frame(X_A = c(9, 19, 29, 39),
-                                            Y_A = c(1, 1, 1, 1),
-                                            X_C = c(5, 5, 5, 5),
-                                            Y_C = c(0, 0, 0, 0)),
-                       t = c(3, 3, 3, 3),
-                       lambda = data.frame(incidence = c(0.4, 0.8, 0.9, 0.95)),
-                       formula = "incidence = (Y_A + Y_C)/(X_A + X_C + Y_A + Y_C)")
-res <- eode_gridSearch(x, pdat = training_data, space = list(beta = seq(0.05,0.15,0.01)))
+x <- eode(
+  dX_Cdt = dX_Cdt, dY_Cdt = dY_Cdt, dX_Adt = dX_Adt, dY_Adt = dY_Adt,
+  constraint = c("X_C>=0", "Y_C>=0", "X_A>=0", "Y_A>=0")
+)
+training_data <- pdata(x,
+  init = data.frame(
+    X_A = c(9, 19, 29, 39),
+    Y_A = c(1, 1, 1, 1),
+    X_C = c(5, 5, 5, 5),
+    Y_C = c(0, 0, 0, 0)
+  ),
+  t = c(3, 3, 3, 3),
+  lambda = data.frame(incidence = c(0.4, 0.8, 0.9, 0.95)),
+  formula = "incidence = (Y_A + Y_C)/(X_A + X_C + Y_A + Y_C)"
+)
+res <- eode_gridSearch(x, pdat = training_data, space = list(beta = seq(0.05, 0.15, 0.01)))
 res
+}
 }

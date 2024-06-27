@@ -19,7 +19,11 @@ eode_get_cripoi(
 giving start estimates.}
 
 \item{eps}{Precision for the stopping criterion. Iteration will stop after
-the movement of the phase point in a single step is smaller than \cde{eps}.}
+the movement of the phase point in a single step is smaller than \code{eps}.}
+
+\item{max_step}{Maximum number}
+
+\item{method}{one of "Newton", "GradDesc"}
 }
 \value{
 An object of class "\code{pp}" representing an equilibrium point found.
@@ -29,26 +33,32 @@ Finds an equilibrium point (or critical point) of an ODE system based on
 Newton iteration method.
 }
 \examples{
-##Example 1: Lotka-Volterra competition model
+## Example 1: Lotka-Volterra competition model
 eq1 <- function(x, y, r1 = 1, a11 = 1, a12 = 2) (r1 - a11 * x - a12 * y) * x
 eq2 <- function(x, y, r2 = 1, a21 = 2, a22 = 1) (r2 - a21 * x - a22 * y) * y
 x <- eode(dxdt = eq1, dydt = eq2)
 eode_get_cripoi(x, init_value = pp(list(x = 0.5, y = 0.5)))
 
-##Example 2: Susceptible-infected model
-dX_Cdt <- function(X_C, Y_C, X_A, Y_A, nu = 0.15, beta = 0.1, mu = 0.15, g = 0.04)
-nu * (X_A + Y_A) - beta * X_C * (Y_C + Y_A) - (mu + g) * X_C
+## Example 2: Susceptible-infected model
+dX_Cdt <- function(X_C, Y_C, X_A, Y_A, nu = 0.15, beta = 0.1, mu = 0.15, g = 0.04) {
+  nu * (X_A + Y_A) - beta * X_C * (Y_C + Y_A) - (mu + g) * X_C
+}
 
-dY_Cdt <- function(X_C, Y_C, Y_A, beta = 0.1, mu = 0.15, g = 0.04, rho = 0.2)
-beta * X_C * (Y_C + Y_A) - (mu + g + rho) * Y_C
+dY_Cdt <- function(X_C, Y_C, Y_A, beta = 0.1, mu = 0.15, g = 0.04, rho = 0.2) {
+  beta * X_C * (Y_C + Y_A) - (mu + g + rho) * Y_C
+}
 
-dX_Adt <- function(X_C, Y_C, X_A, Y_A, beta = 0.1, g = 0.04)
-g * X_C - beta * X_A * (Y_C + Y_A)
+dX_Adt <- function(X_C, Y_C, X_A, Y_A, beta = 0.1, g = 0.04) {
+  g * X_C - beta * X_A * (Y_C + Y_A)
+}
 
-dY_Adt <- function(X_A, Y_C, Y_A, beta = 0.1, g = 0.04, rho = 0.2)
-beta * X_A * (Y_C + Y_A) + g * Y_C - rho * Y_A
+dY_Adt <- function(X_A, Y_C, Y_A, beta = 0.1, g = 0.04, rho = 0.2) {
+  beta * X_A * (Y_C + Y_A) + g * Y_C - rho * Y_A
+}
 
-x <- eode(dX_Cdt = dX_Cdt, dY_Cdt = dY_Cdt, dX_Adt = dX_Adt, dY_Adt = dY_Adt,
-constraint = c("X_C>=0","Y_C>=0","X_A>=0","Y_A>=0"))
-eode_get_cripoi(x, init_value = pp(list(X_C=1, Y_C=1, X_A=1, Y_A=1)))
+x <- eode(
+  dX_Cdt = dX_Cdt, dY_Cdt = dY_Cdt, dX_Adt = dX_Adt, dY_Adt = dY_Adt,
+  constraint = c("X_C>=0", "Y_C>=0", "X_A>=0", "Y_A>=0")
+)
+eode_get_cripoi(x, init_value = pp(list(X_C = 1, Y_C = 1, X_A = 1, Y_A = 1)))
 }

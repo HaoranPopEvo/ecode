@@ -4,7 +4,7 @@
 \alias{eode_is_centre}
 \title{Centre}
 \usage{
-eode_is_centre(c)
+eode_is_centre(x, value, eps = 0.001)
 }
 \arguments{
 \item{x}{Object of class "\code{eode}" representing an ODE system.}

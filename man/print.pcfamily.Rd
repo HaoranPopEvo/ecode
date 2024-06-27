@@ -4,12 +4,15 @@
 \alias{print.pcfamily}
 \title{Print Brief Details of a Phase Curve Family}
 \usage{
-\method{print}{pcfamily}(x)
+\method{print}{pcfamily}(x, ...)
 }
 \arguments{
 \item{x}{Object of class "\code{pcfamily}".}
 
 \item{...}{Ignored.}
+}
+\value{
+No value
 }
 \description{
 Prints a very brief description of a phase curve family.
@@ -17,6 +20,6 @@ Prints a very brief description of a phase curve family.
 \examples{
 eq1 <- function(x, y, r1 = 4, a11 = 1, a12 = 2) (r1 - a11 * x - a12 * y) * x
 eq2 <- function(x, y, r2 = 1, a21 = 2, a22 = 1) (r2 - a21 * x - a22 * y) * y
-x <- eode(dxdt = eq1, dydt = eq2, constraint = c("x<100","y<100"))
-eode_sensitivity_proj(x, valueSpace = list(x = c(0.2, 0.3, 0.4), y = 0.1, a11 = 1:3), N=100)
+x <- eode(dxdt = eq1, dydt = eq2, constraint = c("x<100", "y<100"))
+eode_sensitivity_proj(x, valueSpace = list(x = c(0.2, 0.3, 0.4), y = 0.1, a11 = 1:3), N = 100)
 }

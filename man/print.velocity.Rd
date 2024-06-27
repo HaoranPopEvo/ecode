@@ -11,6 +11,9 @@
 
 \item{...}{Ignored.}
 }
+\value{
+No value
+}
 \description{
 Prints a very brief description of a phase velocity vector.
 }

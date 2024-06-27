@@ -4,7 +4,7 @@
 \alias{plot.pc}
 \title{Plot a Phase Curve With Time}
 \usage{
-\method{plot}{pc}(x, model_var_label = NULL, model_var_color = NULL)
+\method{plot}{pc}(x, model_var_label = NULL, model_var_color = NULL, ...)
 }
 \arguments{
 \item{x}{object of class "\code{pc}" that represents a phase curve.}
@@ -26,7 +26,7 @@ Creates a plot of a phase curve
 \examples{
 eq1 <- function(x, y, r1 = 4, a11 = 1, a12 = 2) (r1 - a11 * x - a12 * y) * x
 eq2 <- function(x, y, r2 = 1, a21 = 2, a22 = 1) (r2 - a21 * x - a22 * y) * y
-x <- eode(dxdt = eq1, dydt = eq2, constraint = c("x<1","y<1"))
+x <- eode(dxdt = eq1, dydt = eq2, constraint = c("x<1", "y<1"))
 pc <- eode_proj(x, value0 = pp(list(x = 0.2, y = 0.1)), N = 100)
 plot(pc)
 }

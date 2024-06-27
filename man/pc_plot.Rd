@@ -18,7 +18,7 @@ Creates a plot of a phase curve in its phase plane
 \examples{
 eq1 <- function(x, y, r1 = 1, a11 = 2, a12 = 1) (r1 - a11 * x - a12 * y) * x
 eq2 <- function(x, y, r2 = 1, a21 = 1, a22 = 2) (r2 - a21 * x - a22 * y) * y
-x <- eode(dxdt = eq1, dydt = eq2, constraint = c("x<100","y<100"))
+x <- eode(dxdt = eq1, dydt = eq2, constraint = c("x<100", "y<100"))
 pc <- eode_proj(x, value0 = pp(list(x = 0.2, y = 0.1)), N = 50, step = 0.1)
 pc_plot(pc)
 }

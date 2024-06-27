@@ -11,12 +11,15 @@
 
 \item{...}{Ignored.}
 }
+\value{
+No value
+}
 \description{
 Prints a very brief description of a phase curve.
 }
 \examples{
 eq1 <- function(x, y, r1 = 4, a11 = 1, a12 = 2) (r1 - a11 * x - a12 * y) * x
 eq2 <- function(x, y, r2 = 1, a21 = 2, a22 = 1) (r2 - a21 * x - a22 * y) * y
-x <- eode(dxdt = eq1, dydt = eq2, constraint = c("x<1","y<1"))
+x <- eode(dxdt = eq1, dydt = eq2, constraint = c("x<1", "y<1"))
 eode_proj(x, value0 = pp(list(x = 0.9, y = 0.9)), N = 8)
 }

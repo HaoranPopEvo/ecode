@@ -21,7 +21,7 @@ sensitivity analysis.}
 }
 \value{
 an object of "\code{pcfamily}" class, each component having three
-sub-components:\n
+sub-components:
 \code{$grid_var}: variables or parameters whose values are changed throughout
 the sensitivity analysis.
 \code{$fixed_var}: variables whose values are not changed.
@@ -33,6 +33,6 @@ Run a sensitivity analysis on an ODE system.
 \examples{
 eq1 <- function(x, y, r1 = 4, a11 = 1, a12 = 2) (r1 - a11 * x - a12 * y) * x
 eq2 <- function(x, y, r2 = 1, a21 = 2, a22 = 1) (r2 - a21 * x - a22 * y) * y
-x <- eode(dxdt = eq1, dydt = eq2, constraint = c("x<100","y<100"))
-eode_sensitivity_proj(x, valueSpace = list(x = c(0.2, 0.3, 0.4), y = 0.1, a11 = 1:3), N=100)
+x <- eode(dxdt = eq1, dydt = eq2, constraint = c("x<100", "y<100"))
+eode_sensitivity_proj(x, valueSpace = list(x = c(0.2, 0.3, 0.4), y = 0.1, a11 = 1:3), N = 100)
 }

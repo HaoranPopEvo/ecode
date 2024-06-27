@@ -11,6 +11,9 @@
 
 \item{i}{indice specifying elements to extract.}
 }
+\value{
+pdata object
+}
 \description{
 Operators acting on population dynamics data.
 }
@@ -18,9 +21,11 @@ Operators acting on population dynamics data.
 eq1 <- function(x, y, r1 = 4, a11 = 1, a12 = 2) (r1 - a11 * x - a12 * y) * x
 eq2 <- function(x, y, r2 = 1, a21 = 2, a22 = 1) (r2 - a21 * x - a22 * y) * y
 x <- eode(dxdt = eq1, dydt = eq2)
-pdat <- pdata(x, init = data.frame(x = c(10, 20), y = c(5, 15)),
-              t = c(3, 3),
-              lambda = data.frame(z = c(15, 30)),
-              formula = "z = x + y")
+pdat <- pdata(x,
+  init = data.frame(x = c(10, 20), y = c(5, 15)),
+  t = c(3, 3),
+  lambda = data.frame(z = c(15, 30)),
+  formula = "z = x + y"
+)
 pdat[1]
 }
