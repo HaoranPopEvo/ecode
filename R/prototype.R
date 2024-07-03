@@ -58,7 +58,7 @@ eode <- function(..., constraint = NULL) {
     if (length(error_message) == 0) error_message <- ""
     if (grepl("Error", error_message) & grepl("not found", error_message) & grepl("Error", error_message)) {
       invalid_variable <- strsplit(error_message, "'")[[1]][2]
-      print(fun)
+      # print(fun)
       stop(paste0("variable '", invalid_variable, "' not found in function arguments. Consider the syntax of the function printed above.\n"))
     }
 
@@ -336,7 +336,7 @@ plot.eode <- function(x, n.grid = 20, scaleL = 1, scaleAH = 1, scaleS = 1,
     names(add_covar) <- axis_var_names[-c(1:2)]
     set_covar <- c(set_covar, add_covar)
     axis_var_names <- axis_var_names[1:2]
-    cat(paste0("Set ", paste(names(add_covar), as.numeric(add_covar), sep = " = ", collapse = ", "), " for mapping in two axis\n"))
+    message(paste0("Set ", paste(names(add_covar), as.numeric(add_covar), sep = " = ", collapse = ", "), " for mapping in two axis\n"))
   }
 
   if (length(axis_var_names) == 2) {

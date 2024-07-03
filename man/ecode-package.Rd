@@ -6,7 +6,7 @@
 \alias{ecode-package}
 \title{ecode: Ordinary Differential Equation Systems in Ecology}
 \description{
-Provides general framework to investigate population and community dynamics through dyanmical system modelling with integration of a wide array of graphical, analytical, and numerical techniques.
+A framework to simulate ecosystem dynamics through ordinary differential equations (ODEs). You create an ODE model, tells 'ecode' to explore its behaviour, and perform numerical simulations on the model. 'ecode' also allows you to fit model parameters by machine learning algorithms. Potential users include researchers who are interested in the dynamics of ecological community and biogeochemical cycles.
 }
 \seealso{
 Useful links:
@@ -17,11 +17,11 @@ Useful links:
 
 }
 \author{
-\strong{Maintainer}: Chen Peng \email{pengchen2001@zju.edu.cn} (\href{https://orcid.org/0000-0002-9449-7606}{ORCID})
+\strong{Maintainer}: Haoran Wu \email{haoran.wu@wolfson.ox.ac.uk} (\href{https://orcid.org/0000-0001-9449-6112}{ORCID})
 
 Authors:
 \itemize{
-  \item Haoran Wu \email{haoran.wu@wolfson.ox.ac.uk} (\href{https://orcid.org/0000-0001-9449-6112}{ORCID})
+  \item Chen Peng \email{pengchen2001@zju.edu.cn} (\href{https://orcid.org/0000-0002-9449-7606}{ORCID})
 }
 
 }

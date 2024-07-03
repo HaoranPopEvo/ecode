@@ -9,7 +9,8 @@ eode_get_cripoi(
   init_value,
   eps = 0.001,
   max_step = 0.01,
-  method = c("Newton", "GradDesc")
+  method = c("Newton", "GradDesc"),
+  verbose = TRUE
 )
 }
 \arguments{
@@ -24,6 +25,8 @@ the movement of the phase point in a single step is smaller than \code{eps}.}
 \item{max_step}{Maximum number}
 
 \item{method}{one of "Newton", "GradDesc"}
+
+\item{verbose}{Logical, whether to print the iteration process.}
 }
 \value{
 An object of class "\code{pp}" representing an equilibrium point found.

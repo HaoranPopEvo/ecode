@@ -260,6 +260,7 @@ eode_get_sysmat <- function(x, value, delta = 10e-6) {
 #' the movement of the phase point in a single step is smaller than \code{eps}.
 #' @param max_step Maximum number
 #' @param method one of "Newton", "GradDesc"
+#' @param verbose Logical, whether to print the iteration process.
 #'
 #' @return An object of class "\code{pp}" representing an equilibrium point found.
 #' @export
@@ -294,7 +295,7 @@ eode_get_sysmat <- function(x, value, delta = 10e-6) {
 #'   constraint = c("X_C>=0", "Y_C>=0", "X_A>=0", "Y_A>=0")
 #' )
 #' eode_get_cripoi(x, init_value = pp(list(X_C = 1, Y_C = 1, X_A = 1, Y_A = 1)))
-eode_get_cripoi <- function(x, init_value, eps = 10e-4, max_step = 0.01, method = c("Newton", "GradDesc")) {
+eode_get_cripoi <- function(x, init_value, eps = 10e-4, max_step = 0.01, method = c("Newton", "GradDesc"), verbose = TRUE) {
   if (!eode_is_validval(x, init_value)) stop("phase point out of the boundary. Please check the constraints of the ODE system")
   if (length(method) > 1) method <- method[1]
 
@@ -315,12 +316,12 @@ eode_get_cripoi <- function(x, init_value, eps = 10e-4, max_step = 0.01, method 
         error = function(e) e
       )
       if ("error" %in% class(res)) {
-        cat("Fail to find an equilibrium point. The function will return iteration history\n")
-
-
-        print(data.frame(do.call(rbind, lapply(track, function(xx) {
-          xx
-        }))))
+        message("Fail to find an equilibrium point. The function will return iteration history\n")
+        if (verbose) {
+          print(data.frame(do.call(rbind, lapply(track, function(xx) {
+            xx
+          }))))
+        }
         stop("Fail to find an equilibrium point. Please try other initial values")
       }
       for (ii in 1:length(var_input)) {
@@ -342,10 +343,12 @@ eode_get_cripoi <- function(x, init_value, eps = 10e-4, max_step = 0.01, method 
       }
       track <- c(track, list(var_input))
       if (!eode_is_validval(x, var_input)) {
-        cat("Phase points go out of the boundary. Iteration History:\n")
-        print(data.frame(do.call(rbind, lapply(track, function(xx) {
-          xx
-        }))))
+        message("Phase points go out of the boundary. Iteration History:\n")
+        if (verbose) {
+          print(data.frame(do.call(rbind, lapply(track, function(xx) {
+            xx
+          }))))
+        }
         stop("Fail to find an equilibrium point. Please try other initial values")
       }
       if (sqrt(sum(pvv^2)) < eps) break

@@ -59,29 +59,31 @@ eode_proj <- function(x, value0, N, step = 0.01) {
     }
     if (!eode_is_validval(x, value)) {
       warning("Phase point reaches boundary at iteration ", i)
-      options(warn = -1)
-      for (model_var in names(value)) {
-        for (focus_constraint in x$constraint[grepl(model_var, x$constraint)]) {
-          if (!eval(parse(text = paste0("with(value,", focus_constraint, ")")))) {
-            if (grepl("=", focus_constraint)) {
-              value[[which(names(value) == model_var)]] <- as.numeric(str_extract_all(focus_constraint, "\\d+")[[1]])
-            } else {
-              if (grepl(">", focus_constraint)) {
-                value[[which(names(value) == model_var)]] <- as.numeric(str_extract_all(focus_constraint, "\\d+")[[1]]) + 0.001
+      # options(warn = -1)
+      suppressWarnings({
+        for (model_var in names(value)) {
+          for (focus_constraint in x$constraint[grepl(model_var, x$constraint)]) {
+            if (!eval(parse(text = paste0("with(value,", focus_constraint, ")")))) {
+              if (grepl("=", focus_constraint)) {
+                value[[which(names(value) == model_var)]] <- as.numeric(str_extract_all(focus_constraint, "\\d+")[[1]])
               } else {
-                value[[which(names(value) == model_var)]] <- as.numeric(str_extract_all(focus_constraint, "\\d+")[[1]]) - 0.001
+                if (grepl(">", focus_constraint)) {
+                  value[[which(names(value) == model_var)]] <- as.numeric(str_extract_all(focus_constraint, "\\d+")[[1]]) + 0.001
+                } else {
+                  value[[which(names(value) == model_var)]] <- as.numeric(str_extract_all(focus_constraint, "\\d+")[[1]]) - 0.001
+                }
               }
             }
           }
         }
-      }
+      })
     }
     traj <- as.data.frame(t(as.numeric(value)))
     colnames(traj) <- names(value)
 
     trajectory <- rbind(trajectory, traj)
   }
-  options(warn = 0)
+  # options(warn = 0)
 
   trajectory$t <- 0:(nrow(trajectory) - 1)
   class(trajectory) <- "pc"
@@ -484,21 +486,21 @@ eode_lossf <- function(x, pdat, step = 0.01) {
 eode_gridSearch <- function(x, pdat, space, step = 0.01) {
   grids <- expand.grid(space)
   lossf <- data.frame(grids, lossf = 0)
-  cat("Start Grid Search...\n")
+  message("Start Grid Search...\n")
   for (i in 1:nrow(grids)) {
     paras <- data.frame(grids[i, ])
     colnames(paras) <- colnames(grids)
     try_ode <- eode_set_parameter(x, ParaList = as.list(paras))
     try_lossf <- eode_lossf(try_ode, pdat, step = step)
-    cat(paste0("Parameter: ", paste(colnames(paras), paras, sep = " = ", collapse = ", "), ", Loss Function: ", round(try_lossf, 3), "\n"))
+    message(paste0("Parameter: ", paste(colnames(paras), paras, sep = " = ", collapse = ", "), ", Loss Function: ", round(try_lossf, 3), "\n"))
     lossf[i, "lossf"] <- try_lossf
   }
-  cat("Finished.\n")
+  message("Finished.\n")
 
   optPara <- data.frame(lossf[which.min(lossf$lossf)[1], -ncol(lossf)])
   colnames(optPara) <- colnames(grids)
-  cat("Optimal Parameters:", paste(colnames(optPara), optPara, sep = " = ", collapse = ", "), "\n") #
-  cat("Loss Function:", min(lossf$lossf), "\n")
+  message("Optimal Parameters:", paste(colnames(optPara), optPara, sep = " = ", collapse = ", "), "\n") #
+  message("Loss Function:", min(lossf$lossf), "\n")
   lossf
 }
 
@@ -559,7 +561,7 @@ eode_gridSearch <- function(x, pdat, space, step = 0.01) {
 #' }
 eode_simuAnnealing <- function(x, pdat, paras = "ALL", max_disturb = 0.2, AnnN = 100, step = 0.01, prop.train = 1) {
   whole_pdat <- pdat
-  cat("Start Simulated Annealing...\n")
+  message("Start Simulated Annealing...\n")
   if (prop.train != 1) {
     sample_index <- sample(1:length.pdata(whole_pdat), length.pdata(whole_pdat))
     sample_selected <- sample_index > length.pdata(whole_pdat) * prop.train
@@ -578,7 +580,7 @@ eode_simuAnnealing <- function(x, pdat, paras = "ALL", max_disturb = 0.2, AnnN =
   } else {
     sa_recording <- data.frame(x$parameter, lossf = lossf_now)
   }
-  cat("Step 0 - loss function =", lossf_now, "\n")
+  message("Step 0 - loss function =", lossf_now, "\n")
   for (i in 1:AnnN) {
     if (prop.train != 1) {
       sample_index <- sample(1:length.pdata(whole_pdat), length.pdata(whole_pdat))
@@ -587,7 +589,7 @@ eode_simuAnnealing <- function(x, pdat, paras = "ALL", max_disturb = 0.2, AnnN =
       pvali <- whole_pdat[!sample_selected]
     }
     disturb_i <- max_disturb - max_disturb / AnnN * (i - 1)
-    cat("Disturbance:", paste0(disturb_i * 100, "%"), "...\n")
+    message("Disturbance:", paste0(disturb_i * 100, "%"), "...\n")
     if (paras[1] == "ALL") {
       parameter_sets <- x$parameter
     } else {
@@ -599,9 +601,9 @@ eode_simuAnnealing <- function(x, pdat, paras = "ALL", max_disturb = 0.2, AnnN =
     if (lossf_new < lossf_now) {
       x <- x_new
       lossf_now <- lossf_new
-      cat("Step", i, "- parameter resetted:", paste(names(parameter_sets), round(as.numeric(parameter_sets), 3), sep = "=", collapse = ", "), "- loss function =", lossf_now, "\n")
+      message("Step", i, "- parameter resetted:", paste(names(parameter_sets), round(as.numeric(parameter_sets), 3), sep = "=", collapse = ", "), "- loss function =", lossf_now, "\n")
     } else {
-      cat("Step", i, "- parameters remain unchanged.\n")
+      message("Step", i, "- parameters remain unchanged.\n")
     }
 
     if (prop.train != 1) {
@@ -615,8 +617,8 @@ eode_simuAnnealing <- function(x, pdat, paras = "ALL", max_disturb = 0.2, AnnN =
       sa_recording <- rbind(sa_recording, data.frame(x$parameter, lossf = lossf_now))
     }
   }
-  cat("Finished.\n")
-  cat("Parameters:", paste(names(x$parameter), round(as.numeric(x$parameter), 3), sep = "=", collapse = ", "), "- loss function =", lossf_now, "\n")
+  message("Finished.\n")
+  message("Parameters:", paste(names(x$parameter), round(as.numeric(x$parameter), 3), sep = "=", collapse = ", "), "- loss function =", lossf_now, "\n")
 
   sa_recording
 }
@@ -654,7 +656,7 @@ eode_sensitivity_proj <- function(x, valueSpace, N, step = 0.01) {
   grids <- expand.grid(valueSpace)
   res <- list()
   for (i in 1:nrow(grids)) {
-    cat(paste0("Parameter Settings: ", paste(grid_var_name, grids[i, grid_var_name], sep = " = ", collapse = ", "), "\n"))
+    message(paste0("Parameter Settings: ", paste(grid_var_name, grids[i, grid_var_name], sep = " = ", collapse = ", "), "\n"))
     inits <- as.list(grids[i, colnames(grids) %in% x$variables])
     if (length(inits) == 1) names(inits) <- colnames(grids)[colnames(grids) %in% x$variables]
     paras <- as.list(grids[i, !(colnames(grids) %in% x$variables)])
