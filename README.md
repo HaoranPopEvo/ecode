@@ -29,11 +29,19 @@ Ecological Modelling,
 
 ## Installation
 
-The `ecode` package is currently only available at GitHub. Installation can be done by the following code:
+You can install the released version of `ecode` from
+[CRAN](https://CRAN.R-project.org) with:
 
-```{r}
-library(devtools)
-install_github("HaoranPopEvo/ecode")
+``` r
+install.packages("ecode")
+```
+
+You can install the development version of `ecode` from
+[GitHub](https://github.com/) with:
+
+``` r
+# install.packages("devtools")
+devtools::install_github("HaoranPopEvo/ecode")
 ```
 
 
