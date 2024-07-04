@@ -4,12 +4,15 @@
 \alias{plot.velocity}
 \title{Create a Plot of a Phase Velocity Vector}
 \usage{
-\method{plot}{velocity}(x)
+\method{plot}{velocity}(x, ...)
 }
 \arguments{
 \item{x}{Object of class "\code{velocity}".}
 
 \item{...}{Ignored.}
+}
+\value{
+ggplot object
 }
 \description{
 Plot a phase velocity vector

@@ -10,8 +10,6 @@ pc_calculator(x, formula)
 \item{x}{the ODE system under consideration. An object of "\code{eode}" class.}
 
 \item{formula}{formula that specifies how to calculate the variable to be traced.}
-
-\item{phase_curve}{simulated phase curve. An object of "\code{pc}" class.}
 }
 \value{
 an object of "\code{pc}" class with extra variables being attached.
@@ -22,7 +20,7 @@ Calculate one or several variables during the simulation of an ODE system
 \examples{
 eq1 <- function(x, y, r1 = 4, a11 = 1, a12 = 2) (r1 - a11 * x - a12 * y) * x
 eq2 <- function(x, y, r2 = 1, a21 = 2, a22 = 1) (r2 - a21 * x - a22 * y) * y
-x <- eode(dxdt = eq1, dydt = eq2, constraint = c("x<100","y<100"))
+x <- eode(dxdt = eq1, dydt = eq2, constraint = c("x<100", "y<100"))
 pc <- eode_proj(x, value0 = pp(list(x = 0.2, y = 0.1)), N = 100)
 pc_calculator(pc, formula = "z = x + y")
 }
