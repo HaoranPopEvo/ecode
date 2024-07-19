@@ -44,10 +44,9 @@ You can install the development version of `ecode` from
 devtools::install_github("HaoranPopEvo/ecode")
 ```
 
-
 Test code:
 
-```{r}
+``` r
 ##Example1: Lotka-Volterra competition model
 library(ecode)
 eq1 <- function(x, y, r1 = 4, a11 = 1, a12 = 2) (r1 - a11 * x - a12 * y) * x
@@ -57,3 +56,4 @@ x
 plot(x)
 ```
 
+Please go to <https://bookdown.org/Asa12138/ecode_book/> for the full vignette.
