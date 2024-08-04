@@ -16,6 +16,8 @@ The package incorporates advanced techniques such as grid search methods and sim
 
 Notably, ecode minimises external dependencies, ensuring robustness and reducing the risk of package failure caused by updates in dependencies. 
 
+Please find the user manual at https://bookdown.org/Asa12138/ecode_book/.
+
 ## Citation
 
 To cite `ecode` in publications use:
